@@ -1,0 +1,58 @@
+{
+	"name": "hesari-os",
+	"version": "5.1.2",
+	"description": "HESARI OS — Build. Manage. Evolve. Personal network command center based on BPB Panel.",
+	"homepage": "https://mj-hesari.ir",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/mjhesari/Hesari-Os.git"
+	},
+	"bugs": {
+		"url": "https://github.com/mjhesari/Hesari-Os/issues"
+	},
+	"author": "MJ Hesari",
+	"engines": {
+		"node": ">=22.12.0"
+	},
+	"license": "GPL-3.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"check": "tsc --noEmit",
+		"build": "node scripts/build.js",
+		"predev": "npm run build",
+		"dev": "node scripts/run-worker.js dev",
+		"build-dev": "node scripts/build.js --development",
+		"predeploy": "npm run build",
+		"deploy": "node scripts/run-worker.js deploy",
+		"predeploy:check": "npm run build",
+		"deploy:check": "node scripts/run-worker.js dry-run",
+		"test": "node --test scripts/branding.test.js tests/*.test.js",
+		"pretest": "npm run build",
+		"test:worker": "npm run build && node --test tests/worker.test.js",
+		"configure": "node scripts/configure-worker.js",
+		"docs:brand": "node scripts/brand-docs.js",
+		"check:branding": "node --test scripts/branding.test.js"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^5.20261124.1",
+		"@eslint/css": "^1.3.0",
+		"@eslint/js": "^10.0.1",
+		"@eslint/markdown": "^8.0.2",
+		"@types/node": "^25.9.1",
+		"esbuild": "^0.28.0",
+		"eslint": "^10.4.1",
+		"glob": "^13.0.6",
+		"globals": "^17.6.0",
+		"html-minifier": "^4.0.0",
+		"miniflare": "^4.20260730.0",
+		"terser": "^5.48.0",
+		"typescript": "^6.0.3",
+		"wrangler": "^4.167.0"
+	},
+	"dependencies": {
+		"jose": "^6.2.3",
+		"jszip": "^3.10.1",
+		"qrcode-generator": "^2.0.4"
+	}
+}

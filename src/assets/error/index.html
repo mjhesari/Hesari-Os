@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>__BRAND_NAME__ · Something went wrong</title>
+    <meta name="description" content="__BRAND_DESCRIPTION__">
+    <meta name="theme-color" content="__BRAND_BACKGROUND__">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,__ICON__">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-bg-main: linear-gradient(90deg, #000328, #00458E);
+            --color-text-primary: #f1f5f9;
+            --color-text-secondary: #aec4e2;
+            --shadow-header: 0.125rem 0.125rem 0.25rem #000328;
+            --space-sm: 0.5rem;
+        }
+
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: "Ubuntu", system-ui;
+            color: var(--color-text-secondary);
+            background: var(--color-bg-main);
+            text-align: center;
+            text-align: center;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1 {
+            color: var(--color-text-primary);
+            text-shadow: var(--shadow-header);
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: var(--space-sm);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .icon {
+            height: 2.5rem;
+        }
+
+        .panel-version {
+            align-self: flex-start;
+            font-size: large;
+        }
+    </style>
+</head>
+
+<body class="error-page">
+    <div id="error-container">
+        <div class="header">
+            <img id="header-logo" src="data:image/svg+xml;base64,__ICON__" alt="__BRAND_NAME__ logo" width="48" height="48">
+            <h1>
+                __BRAND_NAME__
+                <span class="panel-version">
+                    v__VERSION__
+                </span>
+            </h1>
+        </div>
+
+        <div>
+            <h2>Let’s get you back on track.</h2>
+            <p>
+                <b>__ERROR_MESSAGE__</b>
+            </p>
+        </div>
+            <footer class="brand-footer">
+        <p>__BRAND_NAME__ · __BRAND_TAGLINE__</p>
+        <p>By <a href="__BRAND_WEBSITE__" target="_blank" rel="noopener noreferrer">__BRAND_OWNER__</a> · <a href="__BRAND_GITHUB__" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+        <p>Network engine based on <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel" target="_blank" rel="noopener noreferrer">BPB Panel</a> · GPL-3.0</p>
+    </footer>
+    </div>
+
+</body>
+
+</html>

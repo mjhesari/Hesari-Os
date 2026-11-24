@@ -1,0 +1,15 @@
+{
+  "accID": "YOUR_CLOUDFLARE_ACCOUNT_ID",
+  "accEmail": "you@example.com",
+  "apiToken": "YOUR_CLOUDFLARE_API_TOKEN",
+  "vlUUID": "YOUR_VERSION_4_UUID",
+  "trPass": "YOUR_RANDOM_TROJAN_PASSWORD",
+  "securePath": "YOUR_RANDOM_PRIVATE_PATH",
+  "mainDomain": "your-worker.your-subdomain.workers.dev",
+  "kvNamespaceId": "",
+  "proxyIpMode": "proxyip",
+  "proxyIPs": [],
+  "prefixes": [],
+  "fallback": "",
+  "dohUrl": ""
+}

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>__BRAND_NAME__ · Proxy diagnostics</title>
+    <meta name="description" content="__BRAND_DESCRIPTION__">
+    <meta name="theme-color" content="__BRAND_BACKGROUND__">
+    <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,__ICON__">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=content_copy,flash_on&display=block" />
+    <style>/* CSS_PLACEHOLDER */</style>
+</head>
+
+<body class="utility-page">
+    <div class="header">
+        <img id="header-logo" src="data:image/svg+xml;base64,__ICON__" alt="__BRAND_NAME__ logo" width="48" height="48">
+        <h1>
+            __BRAND_NAME__
+            <span class="panel-version">
+                v__VERSION__
+            </span>
+        </h1>
+    </div>
+
+    <section class="utility-intro"><p class="eyebrow">NETWORK / DIAGNOSTICS</p><h2>Proxy intelligence.</h2><p>Find a healthy endpoint for your personal network.</p></section>
+    <div class="table-wrapper">
+        <table id="geo-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Proxy IP</th>
+                    <th>Health rate</th>
+                    <th>TCP Latency (ms)</th>
+                    <th>Country</th>
+                    <th>City</th>
+                    <th>ISP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="7">Loading...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="brand-footer">
+        <p>__BRAND_NAME__ · __BRAND_TAGLINE__</p>
+        <p>By <a href="__BRAND_WEBSITE__" target="_blank" rel="noopener noreferrer">__BRAND_OWNER__</a> · <a href="__BRAND_GITHUB__" target="_blank" rel="noopener noreferrer">GitHub</a></p>
+        <p>Network engine based on <a href="https://github.com/bia-pain-bache/BPB-Worker-Panel" target="_blank" rel="noopener noreferrer">BPB Panel</a> · GPL-3.0</p>
+    </footer>
+    <script type="module">
+        import { polyfillCountryFlagEmojis } from "https://cdn.skypack.dev/country-flag-emoji-polyfill";
+        polyfillCountryFlagEmojis();
+    </script>
+    <script>/* JS_PLACEHOLDER */</script>
+</body>
+
+</html>

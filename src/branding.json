@@ -1,0 +1,23 @@
+{
+  "name": "HESARI OS",
+  "shortName": "HESARI",
+  "slug": "hesari-os",
+  "initials": "H",
+  "owner": "MJ Hesari",
+  "tagline": "Build. Manage. Evolve.",
+  "description": "A personal command center for professional life and software development.",
+  "githubUrl": "https://github.com/mjhesari",
+  "websiteUrl": "https://mj-hesari.ir",
+  "repositoryUrl": "https://github.com/mjhesari/Hesari-Os",
+  "documentationUrl": "https://mjhesari.github.io/Hesari-Os/",
+  "updates": {
+    "manifestUrl": "https://github.com/mjhesari/Hesari-Os/releases/latest/download/manifest.json",
+    "workerUrl": "https://github.com/mjhesari/Hesari-Os/releases/latest/download/worker.js",
+    "releaseNotesUrl": "https://github.com/mjhesari/Hesari-Os/releases/latest"
+  },
+  "colors": {
+    "background": "#0B1120",
+    "accent": "#14B8A6",
+    "secondary": "#38BDF8"
+  }
+}

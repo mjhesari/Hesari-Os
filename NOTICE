@@ -1,0 +1,13 @@
+HESARI OS
+Personalized by MJ Hesari — https://mj-hesari.ir
+Build. Manage. Evolve.
+
+This is a modified version of BPB Worker Panel v5.1.1.
+Original project: https://github.com/bia-pain-bache/BPB-Worker-Panel
+Original author: bia-pain-bache and contributors.
+Licensed under the GNU General Public License, version 3 (see LICENSE).
+
+Modifications include the HESARI OS identity, application layout, shared visual
+theme, branded subscriptions and exports, configurable update sources,
+local Worker development, documentation, integration tests, and deployment tooling.
+The original networking engine and third-party resource attributions remain.

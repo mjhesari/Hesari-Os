@@ -1,0 +1,27 @@
+h1 {
+    text-align: center;
+}
+
+:root {
+    --md-primary-fg-color: #0b1120;
+    --md-accent-fg-color: #14b8a6;
+}
+[data-md-color-scheme="slate"] {
+    --md-default-bg-color: #0b1120;
+    --md-typeset-a-color: #38bdf8;
+}
+.md-header { border-bottom: 1px solid #14b8a629; }
+
+img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.img-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
