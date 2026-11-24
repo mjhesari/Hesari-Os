@@ -7,6 +7,7 @@ import JSZip from 'jszip';
 import brand from '../src/branding.json' with { type: 'json' };
 import pkg from '../package.json' with { type: 'json' };
 import { compatibilityDate, compatibilityFlags } from '../scripts/worker-config.js';
+import { createRuntimeProfile, personalizeWorkerBundle, parseWorkerBundle } from '../src/common/worker-bundle.js';
 
 // Only external providers are mocked. Every request executes the release Worker,
 // its real handlers, configuration builders, authentication and KV storage.
@@ -32,12 +33,17 @@ async function getDefaults() {
 
 test('release Worker operates as a complete configuration panel', { timeout: 120_000 }, async t => {
     const source = readFileSync(new URL('../dist/worker.js', import.meta.url), 'utf8');
+    const profile = createRuntimeProfile();
+    const configuredSource = await personalizeWorkerBundle(source, profile, embedded);
     const uploads = [];
+    const uploadedModules = [];
     const dnsRequests = [];
     const telegramRequests = [];
     const outboundService = async request => {
         const url = new URL(request.url);
         // Consume request bodies as a real provider does, including Worker uploads.
+        const workerUpload = url.hostname === 'api.cloudflare.com' && request.method === 'PUT' && url.pathname.endsWith('/workers/scripts/hesari-test')
+            ? await request.clone().formData() : null;
         const body = request.method === 'GET' || request.method === 'HEAD' ? '' : await request.text();
         if (url.hostname === 'cloudflare-dns.com') {
             dnsRequests.push({ method: request.method, search: url.search, body });
@@ -50,6 +56,7 @@ test('release Worker operates as a complete configuration panel', { timeout: 120
         }
         if (url.hostname === 'api.cloudflare.com' && url.pathname === `/client/v4/accounts/${embedded.accID}/workers/scripts/hesari-test` && request.method === 'PUT') {
             uploads.push(body);
+            uploadedModules.push(await workerUpload.get('worker.js').text());
             return MockResponse.json({ success: true });
         }
         if (url.hostname === 'api.cloudflare.com' && url.pathname === '/client/v4/graphql') return MockResponse.json({
@@ -63,12 +70,12 @@ test('release Worker operates as a complete configuration panel', { timeout: 120
         throw new Error(`Unexpected provider request in isolated test: ${url.origin}${url.pathname}`);
     };
     const mf = new Miniflare({
-        modules: true, compatibilityDate, compatibilityFlags, kvNamespaces: ['kv'], outboundService,
-        script: `Object.assign(globalThis,${JSON.stringify({ EMBEDED_SETTINGS: embedded })});\n${source}`,
+        modules: true, compatibilityDate, compatibilityFlags, kvNamespaces: [profile.kvBinding], outboundService,
+        script: configuredSource,
         log: new Log(LogLevel.NONE)
     });
     t.after(() => mf.dispose());
-    const kv = await mf.getKVNamespace('kv');
+    const kv = await mf.getKVNamespace(profile.kvBinding);
     await kv.put('proxySettings', JSON.stringify({ ...await getDefaults(), panelVersion: '5.1.1', bestPingInterval: 55 }));
     await kv.put('warpAccounts', JSON.stringify([1, 2].map(value => ({
         privateKey: Buffer.alloc(32, value).toString('base64'), publicKey: Buffer.alloc(32, 5).toString('base64'),
@@ -80,6 +87,28 @@ test('release Worker operates as a complete configuration panel', { timeout: 120
         headers: { ...(cookie && authenticated ? { Cookie: cookie } : {}), ...(body ? { 'Content-Type': 'application/json' } : {}), ...options.headers },
         ...(body ? { body: JSON.stringify(body) } : {})
     });
+
+    async function assertUploadedWorkerRuns(worker, password) {
+        assert.deepEqual(parseWorkerBundle(worker).profile, profile);
+        const restored = new Miniflare({
+            modules: true, compatibilityDate, compatibilityFlags, kvNamespaces: [profile.kvBinding], outboundService,
+            script: worker, log: new Log(LogLevel.NONE)
+        });
+        try {
+            const restoredKV = await restored.getKVNamespace(profile.kvBinding);
+            for (const { name } of (await kv.list()).keys) await restoredKV.put(name, await kv.get(name));
+            const response = await restored.dispatchFetch(`${base}/panel/settings`, { headers: { Cookie: cookie } });
+            assert.equal(response.status, 200, 'uploaded Worker must still authenticate with existing KV');
+            const { body } = await response.json();
+            assert.equal(body.proxySettings.trPass, password);
+            assert.equal(body.proxySettings.bypassIran, true);
+            const subscription = await restored.dispatchFetch(`${base}/sub/raw?app=xray`);
+            assert.equal(subscription.status, 200);
+            assert.ok(Buffer.from(await subscription.text(), 'base64').toString().includes(`trojan://${password}`));
+        } finally {
+            await restored.dispose();
+        }
+    }
 
     await t.test('initial setup renders production HTML and requires account email', async () => {
         const panel = await request('panel');
@@ -164,8 +193,10 @@ test('release Worker operates as a complete configuration panel', { timeout: 120
         assert.equal(response.status, 200, await response.text());
         assert.equal(uploads.length, 1);
         const upload = uploads[0];
-        assert.ok(upload.includes('PANEL_HTML_CONTENT'));
-        assert.ok(upload.includes('EMBEDED_SETTINGS'));
+        assert.ok(upload.includes(profile.names.panel));
+        assert.ok(upload.includes(profile.names.config));
+        assert.deepEqual(parseWorkerBundle(uploadedModules.at(-1)).profile, profile);
+        await assertUploadedWorkerRuns(uploadedModules.at(-1), 'changed-test-password');
     });
 
     await t.test('share settings, QR code, usage and WARP renewal execute real routes', async () => {
@@ -191,6 +222,7 @@ test('release Worker operates as a complete configuration panel', { timeout: 120
         const response = await request('panel/update-panel', { method: 'POST' });
         assert.equal(response.status, 200, await response.text());
         assert.equal(uploads.length, before + 1);
+        await assertUploadedWorkerRuns(uploadedModules.at(-1), embedded.trPass);
     });
 
     await t.test('private DoH forwards GET queries and POST wire messages', async () => {

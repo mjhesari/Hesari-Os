@@ -189,7 +189,7 @@ async function addBestFragmentConfigs(
 
         const proxy = buildWebsocketOutbound(
             `proxy-${index + 1}`,
-            _VL_,
+            _R_PROTOCOLA_,
             mainDomain,
             443,
             mainDomain,
@@ -335,7 +335,7 @@ export async function getXrCustomConfigs(isFragment: boolean): Promise<Response>
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-${fileName}-xray.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-${fileName}-xray.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'
@@ -423,7 +423,7 @@ export async function getXrWarpConfigs(
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-${fileName}-xray.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-${fileName}-xray.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'

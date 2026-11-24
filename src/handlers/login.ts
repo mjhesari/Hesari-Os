@@ -27,8 +27,8 @@ async function renderLogin(request: Request, env: Env): Promise<Response> {
         return Response.redirect(panelURL, 302);
     }
 
-    const str = await decompressGzipBase64(LOGIN_HTML_CONTENT);
-    const html = str.replaceAll('__ICON__', ICON_CONTENT);
+    const str = await decompressGzipBase64(_R_LOGIN_);
+    const html = str.replaceAll('__ICON__', _R_ICON_);
 
     return new Response(html, {
         headers: {

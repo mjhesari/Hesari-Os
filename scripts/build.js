@@ -6,6 +6,7 @@ import { minify as jsMinify } from 'terser';
 import { renderAsset, brandIcon } from './assets.js';
 import pkg from '../package.json' with { type: 'json' };
 import { gzipSync } from 'zlib';
+import { compilerNames, createRuntimeProfile, encodeWorkerBundle, renameRuntimeSymbols } from '../src/common/worker-bundle.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = pathDirname(__filename);
@@ -66,18 +67,10 @@ async function buildWorker() {
 
     console.log(`${success} Worker minified successfuly!`);
 
-    const base64Gzip = gzipSync(script, { level: 9 }).toString("base64");
-
-    const embededContents = {
-        SOURCE_CONTENT: base64Gzip,
-        PANEL_HTML_CONTENT: htmls['panel'],
-        LOGIN_HTML_CONTENT: htmls['login'],
-        ERROR_HTML_CONTENT: htmls['error'],
-        PROXY_IP_HTML_CONTENT: htmls['proxy-ip'],
-        ICON_CONTENT: faviconBase64
-    };
-
-    const worker = `Object.assign(globalThis, ${JSON.stringify(embededContents)});${script}`;
+    const profile = createRuntimeProfile();
+    const worker = await encodeWorkerBundle(renameRuntimeSymbols(script, compilerNames, profile.names), {
+        panel: htmls.panel, login: htmls.login, error: htmls.error, proxy: htmls['proxy-ip'], icon: faviconBase64
+    }, profile);
 
     mkdirSync(DIST_PATH, { recursive: true });
     writeFileSync('./dist/worker.js', worker, 'utf8');

@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 import { spawn } from 'node:child_process';
 import { dirname, join } from 'node:path';
-import { configureWorker, compatibilityDate, compatibilityFlags } from './worker-config.js';
+import { configureWorker, getInstallationProfile, compatibilityDate, compatibilityFlags } from './worker-config.js';
 
 try {
     const mode = process.argv[2];
@@ -16,7 +16,8 @@ try {
         throw new Error('Unable to parse .local/settings.json. Check that it contains valid JSON.');
     }
     if (mode !== 'dev' && !settings.kvNamespaceId) throw new Error('Set kvNamespaceId to your existing Cloudflare KV namespace ID before deployment.');
-    const configured = configureWorker(settings, { root });
+    const configured = await configureWorker(settings, { root });
+    const profile = getInstallationProfile(settings, { root });
     // Keep the watched module separate from persistent KV and deployment output.
     const runtimeDirectory = join(root, '.local/runtime');
     mkdirSync(runtimeDirectory, { recursive: true, mode: 0o700 });
@@ -25,7 +26,7 @@ try {
         name: settings.mainDomain.split('.')[0], main: 'runtime/worker.js', account_id: settings.accID,
         compatibility_date: compatibilityDate, compatibility_flags: compatibilityFlags,
         workers_dev: true, no_bundle: true,
-        kv_namespaces: [{ binding: 'kv', ...(settings.kvNamespaceId ? { id: settings.kvNamespaceId } : {}) }]
+        kv_namespaces: [{ binding: profile.kvBinding, ...(settings.kvNamespaceId ? { id: settings.kvNamespaceId } : {}) }]
     };
     const configPath = fileURLToPath(new URL('../.local/wrangler.json', import.meta.url));
     writeFileSync(configPath, JSON.stringify(config, null, 2), { mode: 0o600 });

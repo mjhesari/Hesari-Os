@@ -121,7 +121,7 @@ export function buildWebsocketOutbound(
         finalmask: buildFinalMask(isFragment, false, fragLength, fragInterval)
     };
 
-    if (protocol === _VL_) return buildOutbound<VlessSettings>(protocol, tag, false, {
+    if (protocol === _R_PROTOCOLA_) return buildOutbound<VlessSettings>(protocol, tag, false, {
         vnext: [{
             address,
             port,
@@ -244,7 +244,7 @@ export function buildChainOutbound(): Outbound | undefined {
                 }]
             }, streamSettings);
 
-        case _SS_:
+        case _R_PROTOCOLD_:
             return buildOutbound<ShadowsocksSettings>(protocol, 'chain', enableMux, {
                 servers: [{
                     address,
@@ -254,7 +254,7 @@ export function buildChainOutbound(): Outbound | undefined {
                 }]
             }, streamSettings);
 
-        case _VL_:
+        case _R_PROTOCOLA_:
             return buildOutbound<VlessSettings>(protocol, 'chain', enableMux, {
                 vnext: [{
                     address,
@@ -267,7 +267,7 @@ export function buildChainOutbound(): Outbound | undefined {
                 }]
             }, streamSettings);
 
-        case _VM_:
+        case _R_PROTOCOLC_:
             return buildOutbound<VmessSettings>(protocol, 'chain', enableMux, {
                 vnext: [{
                     address,
@@ -279,7 +279,7 @@ export function buildChainOutbound(): Outbound | undefined {
                 }]
             }, streamSettings);
 
-        case _TR_:
+        case _R_PROTOCOLB_:
             return buildOutbound<TrojanSettings>(protocol, 'chain', enableMux, {
                 servers: [{
                     address,

@@ -1,6 +1,6 @@
 import { chmodSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import brand from '../src/branding.json' with { type: 'json' };
+import { createRuntimeProfile, personalizeWorkerBundle, validateRuntimeProfile } from '../src/common/worker-bundle.js';
 
 export const compatibilityDate = '2026-06-03';
 export const compatibilityFlags = ['nodejs_compat'];
@@ -31,12 +31,35 @@ export function validateDeploymentSettings(settings) {
     return embedded;
 }
 
-export function configureWorker(settings, { root = process.cwd() } = {}) {
+export function getInstallationProfile(settings, { root = process.cwd() } = {}) {
+    const path = join(root, '.local/identifiers.json');
+    let registry;
+    try {
+        registry = JSON.parse(readFileSync(path, 'utf8'));
+        if (registry.version !== 1 || !registry.installations || typeof registry.installations !== 'object' || Array.isArray(registry.installations)) throw new Error('Invalid registry');
+        Object.values(registry.installations).forEach(validateRuntimeProfile);
+    } catch (error) {
+        if (error.code !== 'ENOENT') throw new Error('Cannot read .local/identifiers.json. Restore it from your installation backup; identifiers were not regenerated.');
+        registry = { version: 1, installations: {} };
+    }
+    const key = `${settings.accID.trim()}/${settings.mainDomain.trim().toLowerCase()}`;
+    if (!registry.installations[key]) {
+        registry.installations[key] = createRuntimeProfile();
+        mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
+        writeFileSync(path, JSON.stringify(registry, null, 2), { mode: 0o600 });
+    }
+    chmodSync(path, 0o600);
+    return registry.installations[key];
+}
+
+export async function configureWorker(settings, { root = process.cwd() } = {}) {
     const embedded = validateDeploymentSettings(settings);
     const source = readFileSync(join(root, 'dist/worker.js'), 'utf8');
     const output = join(root, '.local/worker.js');
+    const profile = getInstallationProfile(settings, { root });
+    const worker = await personalizeWorkerBundle(source, profile, embedded);
     mkdirSync(dirname(output), { recursive: true, mode: 0o700 });
-    writeFileSync(output, `// ${brand.name} — contains account settings; keep private.\nObject.assign(globalThis,${JSON.stringify({ EMBEDED_SETTINGS: embedded })});\n${source}`, { mode: 0o600 });
+    writeFileSync(output, worker, { mode: 0o600 });
     chmodSync(output, 0o600);
     return output;
 }

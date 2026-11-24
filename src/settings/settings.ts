@@ -12,45 +12,45 @@ import {
 } from '#types/settings';
 
 Object.assign(globalThis, {
-    _VL_: atob('dmxlc3M='),
-    _VL_CAP_: atob('VkxFU1M='),
-    _VM_: atob('dm1lc3M='),
-    _VM_CAP_: atob('Vk1lc3M='),
-    _TR_: atob('dHJvamFu'),
-    _TR_CAP_: atob('VHJvamFu'),
-    _SS_: atob('c2hhZG93c29ja3M='),
-    _V2_: atob('djJyYXk='),
-    _project_: brand.shortName,
-    _project_SM_: brand.slug,
-    _repo_: brand.repositoryUrl || brand.githubUrl,
-    _wizard_repo_: atob('aHR0cHM6Ly9naXRodWIuY29tL2JpYS1wYWluLWJhY2hlL0JQQi1XaXphcmQ='),
-    _website_: brand.documentationUrl,
-    _public_proxy_ip_: atob('YnBiLnlvdXNlZi5pc2VnYXJvLmNvbQ=='),
+    _R_PROTOCOLA_: atob('dmxlc3M='),
+    _R_PROTOCOLALABEL_: atob('VkxFU1M='),
+    _R_PROTOCOLC_: atob('dm1lc3M='),
+    _R_PROTOCOLCLABEL_: atob('Vk1lc3M='),
+    _R_PROTOCOLB_: atob('dHJvamFu'),
+    _R_PROTOCOLBLABEL_: atob('VHJvamFu'),
+    _R_PROTOCOLD_: atob('c2hhZG93c29ja3M='),
+    _R_CLIENT_: atob('djJyYXk='),
+    _R_PROJECT_: brand.shortName,
+    _R_SLUG_: brand.slug,
+    _R_REPOSITORY_: brand.repositoryUrl || brand.githubUrl,
+    _R_WIZARD_: atob('aHR0cHM6Ly9naXRodWIuY29tL2JpYS1wYWluLWJhY2hlL0JQQi1XaXphcmQ='),
+    _R_WEBSITE_: brand.documentationUrl,
+    _R_PROXYHOST_: atob('YnBiLnlvdXNlZi5pc2VnYXJvLmNvbQ=='),
 });
 
 export function init(request: Request, env: Env) {
-    if(env.UUID || env.TR_PASS || typeof EMBEDED_SETTINGS === 'undefined') {
-        throw new Error(`${brand.name} requires embedded account settings. Configure the custom worker using the installation instructions in this fork. The network engine uses the BPB Wizard v3 settings format.`);
+    if(typeof _R_CONFIG_ === 'undefined') {
+        throw new Error(`${brand.name} requires embedded account settings. Run npm run build, then npm run configure with your settings and deploy .local/worker.js.`);
     }
     
     const { pathname, origin, searchParams, hostname } = new URL(request.url);
     globalSettings = {
-        accID: EMBEDED_SETTINGS.accID,
-        accEmail: EMBEDED_SETTINGS.accEmail.toLowerCase(),
-        apiToken: EMBEDED_SETTINGS.apiToken,
-        vlUUID: EMBEDED_SETTINGS.vlUUID,
-        trPass: EMBEDED_SETTINGS.trPass,
-        securePath: EMBEDED_SETTINGS.securePath,
-        proxyIpMode: EMBEDED_SETTINGS.proxyIpMode,
-        proxyIPs: EMBEDED_SETTINGS.proxyIPs.length ? EMBEDED_SETTINGS.proxyIPs : [_public_proxy_ip_],
-        prefixes: EMBEDED_SETTINGS.prefixes.length ? EMBEDED_SETTINGS.prefixes : [
+        accID: _R_CONFIG_.accID,
+        accEmail: _R_CONFIG_.accEmail.toLowerCase(),
+        apiToken: _R_CONFIG_.apiToken,
+        vlUUID: _R_CONFIG_.vlUUID,
+        trPass: _R_CONFIG_.trPass,
+        securePath: _R_CONFIG_.securePath,
+        proxyIpMode: _R_CONFIG_.proxyIpMode,
+        proxyIPs: _R_CONFIG_.proxyIPs.length ? _R_CONFIG_.proxyIPs : [_R_PROXYHOST_],
+        prefixes: _R_CONFIG_.prefixes.length ? _R_CONFIG_.prefixes : [
             '[2a02:898:146:64::]',
             '[2602:fc59:b0:64::]',
             '[2602:fc59:11:64::]'
         ],
-        mainDomain: EMBEDED_SETTINGS.mainDomain,
-        fallback: EMBEDED_SETTINGS.fallback,
-        dohUrl: EMBEDED_SETTINGS.dohUrl || 'https://cloudflare-dns.com/dns-query',
+        mainDomain: _R_CONFIG_.mainDomain,
+        fallback: _R_CONFIG_.fallback,
+        dohUrl: _R_CONFIG_.dohUrl || 'https://cloudflare-dns.com/dns-query',
         deployType: env.CF_PAGES === '1' ? 'pages' : 'workers',
         httpPorts: [80, 8080, 2052, 2082, 2086, 2095, 8880],
         httpsPorts: [443, 8443, 2053, 2083, 2087, 2096],
@@ -72,7 +72,7 @@ export const getGlobals = (): EmbededSettings & ReqSettings => globalSettings;
 export const getWarpAccounts = (): WarpAccount[] => warpAccounts;
 export const getKvSettings = (): KvSettings => kvSettings;
 export function getMainSettings(): MainSettings {
-    const { accID, accEmail, apiToken, mainDomain, ...mainSettings } = EMBEDED_SETTINGS;
+    const { accID, accEmail, apiToken, mainDomain, ...mainSettings } = _R_CONFIG_;
     return mainSettings;
 }
 
@@ -90,7 +90,7 @@ export function getSharedSettings(): SharedSettings {
         prefixes,
         fallback,
         dohUrl
-    } = EMBEDED_SETTINGS;
+    } = _R_CONFIG_;
 
     return {
         ...proxySettings,
@@ -127,7 +127,7 @@ export const subscriptions: Subscription = {
     'normal': {
         label: 'Normal',
         categories: [
-            { core: 'xray', clients: [`${_V2_}N(G)`, 'MahsaNG', 'Streisand'] },
+            { core: 'xray', clients: [`${_R_CLIENT_}N(G)`, 'MahsaNG', 'Streisand'] },
             { core: 'sing-box', clients: ['sing-box', 'husi'] },
             { core: 'clash', clients: ['Clash Meta', 'Clash Verge', 'FlClash', 'Stash'] },
         ]
@@ -135,21 +135,21 @@ export const subscriptions: Subscription = {
     'fragment': {
         label: 'Fragment',
         categories: [
-            { core: 'xray', clients: [`${_V2_}N(G)`, 'MahsaNG', 'Streisand'] },
+            { core: 'xray', clients: [`${_R_CLIENT_}N(G)`, 'MahsaNG', 'Streisand'] },
             { core: 'sing-box', clients: ['sing-box', 'husi'] },
         ]
     },
     'raw': {
         label: 'Raw',
         categories: [
-            { core: 'xray', clients: [`${_V2_}N(G)`, 'MahsaNG', 'Shadowrocket', 'Streisand', 'PassWall'] },
+            { core: 'xray', clients: [`${_R_CLIENT_}N(G)`, 'MahsaNG', 'Shadowrocket', 'Streisand', 'PassWall'] },
             { core: 'sing-box', clients: ['husi', 'NekoBox', 'Hiddify', 'Karing'] },
         ]
     },
     'warp': {
         label: 'Warp',
         categories: [
-            { core: 'xray', clients: [`${_V2_}N(G)`, 'Streisand'] },
+            { core: 'xray', clients: [`${_R_CLIENT_}N(G)`, 'Streisand'] },
             { core: 'sing-box', clients: ['sing-box', 'husi'] },
             { core: 'clash', clients: ['Clash Meta', 'Clash Verge', 'FlClash', 'Stash'] },
             { core: 'wireguard', clients: ['Wireguard'] },
@@ -158,7 +158,7 @@ export const subscriptions: Subscription = {
     'warp-pro': {
         label: 'Warp Pro',
         categories: [
-            { core: 'xray', clients: [`${_V2_}N(G)`, 'Streisand'] },
+            { core: 'xray', clients: [`${_R_CLIENT_}N(G)`, 'Streisand'] },
             { core: 'xray-knocker', clients: ['MahsaNG', 'v2rayN-PRO'] },
             { core: 'clash', clients: ['Clash Meta', 'Clash Verge', 'FlClash', 'Stash'] },
             { core: 'amnezia', clients: ['Amnezia', 'WG Tunnel'] },
@@ -167,8 +167,8 @@ export const subscriptions: Subscription = {
 };
 
 export const clients: Client[] = [
-    { name: `${_V2_}NG`, minVer: '2.2.3', source: 'Github', b64Url: 'aHR0cHM6Ly9naXRodWIuY29tLzJkdXN0L3YycmF5TkcvcmVsZWFzZXMvbGF0ZXN0' },
-    { name: `${_V2_}N`, minVer: '7.22.5', source: 'Github', b64Url: 'aHR0cHM6Ly9naXRodWIuY29tLzJkdXN0L3YycmF5Ti9yZWxlYXNlcy9sYXRlc3Q=' },
+    { name: `${_R_CLIENT_}NG`, minVer: '2.2.3', source: 'Github', b64Url: 'aHR0cHM6Ly9naXRodWIuY29tLzJkdXN0L3YycmF5TkcvcmVsZWFzZXMvbGF0ZXN0' },
+    { name: `${_R_CLIENT_}N`, minVer: '7.22.5', source: 'Github', b64Url: 'aHR0cHM6Ly9naXRodWIuY29tLzJkdXN0L3YycmF5Ti9yZWxlYXNlcy9sYXRlc3Q=' },
     { name: 'MahsaNG', minVer: '17', source: 'Google Play', b64Url: 'aHR0cHM6Ly9wbGF5Lmdvb2dsZS5jb20vc3RvcmUvYXBwcy9kZXRhaWxzP2lkPWNvbS5NYWhzYU5ldC5NYWhzYU5HJmhsPWVu' },
     { name: 'Streisand', minVer: '1.6.71', source: 'App Store', b64Url: 'aHR0cHM6Ly9hcHBzLmFwcGxlLmNvbS91cy9hcHAvc3RyZWlzYW5kL2lkNjQ1MDUzNDA2NA==' },
     { name: 'sing-box', minVer: '1.12.0', source: 'Github', b64Url: 'aHR0cHM6Ly9naXRodWIuY29tL1NhZ2VyTmV0L3NpbmctYm94L3JlbGVhc2VzL2xhdGVzdA==' },
@@ -191,7 +191,7 @@ let kvSettings: KvSettings = {
     allowLANConnection: false,
     logLevel: 'warning',
     customDomain: '',
-    protocols: `${_VL_},${_TR_}`,
+    protocols: `${_R_PROTOCOLA_},${_R_PROTOCOLB_}`,
     remoteDNS: 'https://8.8.8.8/dns-query',
     remoteDnsHost: {
         isDomain: false,

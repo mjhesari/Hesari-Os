@@ -68,7 +68,7 @@ export function buildWebsocketOutbound(
     } = getSettings();
 
     const isTLS = isHttps(port) || address === upstreamServer;
-    if (protocol === _TR_ && !isTLS) return null;
+    if (protocol === _R_PROTOCOLB_ && !isTLS) return null;
     const { host, sni, allowInsecure } = selectSniHost(address, domain);
 
     const tls = isTLS ? buildTLS(
@@ -84,7 +84,7 @@ export function buildWebsocketOutbound(
 
     const transport = buildTransport('ws', undefined, generateWsPath(protocol), host, undefined, 2560);
 
-    if (protocol === _VL_) return buildOutbound<VlessOutbound>(remark, protocol, address, port, enableIPv6, enableTFO, tls, transport, {
+    if (protocol === _R_PROTOCOLA_) return buildOutbound<VlessOutbound>(remark, protocol, address, port, enableIPv6, enableTFO, tls, transport, {
         'uuid': vlUUID,
         'packet-encoding': '',
         'encryption': ''
@@ -181,29 +181,29 @@ export function buildChainOutbound(): ChainOutbound | undefined {
                 'password': pass
             });
 
-        case _SS_:
+        case _R_PROTOCOLD_:
             return buildOutbound<ShadowsocksOutbound>('', 'ss', server, port, false, false, {}, {}, {
                 'cipher': method,
                 'password': password
             });
 
-        case _VL_:
-            return buildOutbound<VlessOutbound>('', _VL_, server, port, false, false, tls, transport, {
+        case _R_PROTOCOLA_:
+            return buildOutbound<VlessOutbound>('', _R_PROTOCOLA_, server, port, false, false, tls, transport, {
                 'uuid': uuid,
                 'flow': flow,
                 'encryption': encryption?.replace('none', '') ?? ''
             });
 
-        case _VM_:
-            return buildOutbound<VmessOutbound>('', _VM_, server, port, false, false, tls, transport, {
+        case _R_PROTOCOLC_:
+            return buildOutbound<VmessOutbound>('', _R_PROTOCOLC_, server, port, false, false, tls, transport, {
                 'uuid': uuid,
                 'cipher': 'auto',
                 'alterId': aid
             });
 
-        case _TR_:
+        case _R_PROTOCOLB_:
             if (security === 'none') return undefined;
-            return buildOutbound<TrojanOutbound>('', _TR_, server, port, false, false, tls, transport, {
+            return buildOutbound<TrojanOutbound>('', _R_PROTOCOLB_, server, port, false, false, tls, transport, {
                 'password': password
             });
 
@@ -243,7 +243,7 @@ function buildTLS(
     if (!['tls', 'reality'].includes(security)) return {};
     const common: TLS = {
         'tls': true,
-        [protocol === _TR_ ? 'sni' : 'servername']: sni,
+        [protocol === _R_PROTOCOLB_ ? 'sni' : 'servername']: sni,
         'client-fingerprint': fingerprint === 'randomized' ? 'random' : fingerprint,
         'skip-cert-verify': allowInsecure
     };
@@ -314,8 +314,8 @@ function buildTransport(
             return {
                 'network': 'ws',
                 'ws-opts': {
-                    [`${_V2_}-http-upgrade`]: true,
-                    [`${_V2_}-http-upgrade-fast-open`]: true,
+                    [`${_R_CLIENT_}-http-upgrade`]: true,
+                    [`${_R_CLIENT_}-http-upgrade-fast-open`]: true,
                     'path': path,
                     'headers': {
                         'Host': host

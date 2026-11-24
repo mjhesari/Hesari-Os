@@ -80,7 +80,7 @@ export function generateRemark(
     const { cleanIPs, customCdnAddrs, customDomain, upstreamParams: { upstreamServer } } = getSettings();
 
     const chainSign = isChain ? '🔗 ' : '';
-    const protoSign = protocol === _VL_ ? _VL_CAP_ : _TR_CAP_;
+    const protoSign = protocol === _R_PROTOCOLA_ ? _R_PROTOCOLALABEL_ : _R_PROTOCOLBLABEL_;
 
     const fragmentSign = isFragment ? 'F ' : '';
     const customDomainSign = domain === customDomain ? 'D ' : '';
@@ -93,8 +93,8 @@ export function generateRemark(
         : addressType = isDomain(address) ? 'Domain' : isIPv4(address) ? 'IPv4' : isIPv6(address) ? 'IPv6' : '';
 
     return address === upstreamServer
-        ? `${_project_} ${index}. ${chainSign}${protoSign} ${configType}- Upstream Proxy`
-        : `${_project_} ${index}. ${chainSign}${protoSign} ${configType}- ${addressType} : ${port}`;
+        ? `${_R_PROJECT_} ${index}. ${chainSign}${protoSign} ${configType}- Upstream Proxy`
+        : `${_R_PROJECT_} ${index}. ${chainSign}${protoSign} ${configType}- ${addressType} : ${port}`;
 }
 
 export function randomUpperCase(str: string): string {
@@ -120,7 +120,7 @@ export function getRandomString(lengthMin: number, lengthMax: number): string {
 }
 
 export function generateWsPath(protocol: string): string {
-    const proto = protocol === _VL_ ? 'vl' : 'tr';
+    const proto = protocol === _R_PROTOCOLA_ ? 'vl' : 'tr';
     return `/${proto}/${getRandomString(16, 32)}`;
 }
 
@@ -323,9 +323,9 @@ export function extractProxyParams(chainProxy: string) {
 
     let url = new URL(chainProxy);
     const protocol = url.protocol.slice(0, -1);
-    const stdProtocol = protocol === 'ss' ? _SS_ : protocol.replace('socks5', 'socks');
+    const stdProtocol = protocol === 'ss' ? _R_PROTOCOLD_ : protocol.replace('socks5', 'socks');
 
-    if (stdProtocol === _VM_) {
+    if (stdProtocol === _R_PROTOCOLC_) {
         const config = JSON.parse(base64DecodeUtf8(url.host));
         return {
             protocol: stdProtocol,
@@ -366,17 +366,17 @@ export function extractProxyParams(chainProxy: string) {
     }
 
     switch (stdProtocol) {
-        case _VL_:
+        case _R_PROTOCOLA_:
             return parseParams(true, {
                 uuid: url.username
             });
 
-        case _TR_:
+        case _R_PROTOCOLB_:
             return parseParams(true, {
                 password: url.username
             });
 
-        case _SS_:
+        case _R_PROTOCOLD_:
             const auth = base64DecodeUtf8(url.username);
             const [first, ...rest] = auth.split(':');
             return parseParams(true, {

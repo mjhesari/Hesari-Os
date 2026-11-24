@@ -32,7 +32,7 @@ export async function getURLConfigs() {
         const security = isTLS ? 'tls' : 'none';
         const config = new URL(`${protocol}://config`);
 
-        if (protocol === _VL_) {
+        if (protocol === _R_PROTOCOLA_) {
             config.username = vlUUID;
             config.searchParams.append('encryption', 'none');
         } else {
@@ -82,15 +82,15 @@ export async function getURLConfigs() {
                 const { sni, host } = selectSniHost(addr, domain);
                 if ((port === upstreamPort) !== (addr === upstreamServer)) continue;
 
-                if (protocols.includes(_VL_)) {
-                    const remark = generateRemark(proxyIndex, port, addr, _VL_, domain, false, false);
-                    const vlConfig = buildConfig(_VL_, addr, port, host, sni, remark);
+                if (protocols.includes(_R_PROTOCOLA_)) {
+                    const remark = generateRemark(proxyIndex, port, addr, _R_PROTOCOLA_, domain, false, false);
+                    const vlConfig = buildConfig(_R_PROTOCOLA_, addr, port, host, sni, remark);
                     VLConfs += `${vlConfig}\n`;
                 }
 
-                if (protocols.includes(_TR_)) {
-                    const remark = generateRemark(proxyIndex, port, addr, _TR_, domain, false, false);
-                    const trConfig = buildConfig(_TR_, addr, port, host, sni, remark);
+                if (protocols.includes(_R_PROTOCOLB_)) {
+                    const remark = generateRemark(proxyIndex, port, addr, _R_PROTOCOLB_, domain, false, false);
+                    const trConfig = buildConfig(_R_PROTOCOLB_, addr, port, host, sni, remark);
                     TRConfs += `${trConfig}\n`;
                 }
 
@@ -123,7 +123,7 @@ export async function getURLConfigs() {
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0',
-            'Profile-Title': `base64:${base64EncodeUtf8(`◈ ${_project_} Raw`)}`,
+            'Profile-Title': `base64:${base64EncodeUtf8(`◈ ${_R_PROJECT_} Raw`)}`,
             'DNS': remoteDNS
         }
     });

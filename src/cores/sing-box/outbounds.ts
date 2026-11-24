@@ -86,7 +86,7 @@ export function buildWebsocketOutbound(
             fingerprint
         ) : undefined;
 
-    if (protocol === _VL_) return buildOutbound<VlessOutbound>(remark, protocol, address, port, enableTFO, {
+    if (protocol === _R_PROTOCOLA_) return buildOutbound<VlessOutbound>(remark, protocol, address, port, enableTFO, {
         uuid: vlUUID,
         packet_encoding: '',
         network: 'tcp'
@@ -177,21 +177,21 @@ export function buildChainOutbound(): ChainOutbound | undefined {
                 network: 'tcp'
             }, undefined, undefined, true);
 
-        case _SS_:
+        case _R_PROTOCOLD_:
             return buildOutbound<ShadowsocksOutbound>('', protocol, server, port, false, {
                 method,
                 password,
                 network: 'tcp'
             }, undefined, undefined, true);
 
-        case _VL_:
+        case _R_PROTOCOLA_:
             return buildOutbound<VlessOutbound>('', protocol, server, port, false, {
                 uuid,
                 flow,
                 network: 'tcp'
             }, tls, transport, true);
 
-        case _VM_:
+        case _R_PROTOCOLC_:
             return buildOutbound<VmessOutbound>('', protocol, server, port, false, {
                 uuid: uuid,
                 security: 'auto',
@@ -199,7 +199,7 @@ export function buildChainOutbound(): ChainOutbound | undefined {
                 network: 'tcp'
             }, tls, transport, true);
 
-        case _TR_:
+        case _R_PROTOCOLB_:
             return buildOutbound<TrojanOutbound>('', protocol, server, port, false, {
                 password: password,
                 network: 'tcp'

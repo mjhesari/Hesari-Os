@@ -32,8 +32,8 @@ export async function handleProxyIPs(request: Request, env: Env): Promise<Respon
 }
 
 async function renderProxyIPs() {
-    const str = await decompressGzipBase64(PROXY_IP_HTML_CONTENT);
-    const html = str.replaceAll('__ICON__', ICON_CONTENT);
+    const str = await decompressGzipBase64(_R_PROXY_);
+    const html = str.replaceAll('__ICON__', _R_ICON_);
 
     return new Response(html, {
         headers: { 'Content-Type': 'text/html; charset=utf-8' }
@@ -41,7 +41,7 @@ async function renderProxyIPs() {
 }
 
 async function getProxyIPsInfo(): Promise<Response> {
-    const ips = await resolveDNS(_public_proxy_ip_, true);
+    const ips = await resolveDNS(_R_PROXYHOST_, true);
     const geoLocInfo = await geoLookupBatch(ips.ipv4);
     return respond(
         true,

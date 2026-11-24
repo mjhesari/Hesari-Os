@@ -41,7 +41,7 @@ export async function getWireguardConfigs(isPro: boolean): Promise<Response> {
                 'PersistentKeepalive = 25'
             ].join('\n');
 
-            zip.file(`${_project_}-Warp-${index + 1}.conf`, conf);
+            zip.file(`${_R_PROJECT_}-Warp-${index + 1}.conf`, conf);
         });
 
         const zipBlob = await zip.generateAsync({ type: 'blob' });
@@ -51,7 +51,7 @@ export async function getWireguardConfigs(isPro: boolean): Promise<Response> {
         return new Response(arrayBuffer, {
             headers: {
                 'Content-Type': 'application/zip',
-                'Content-Disposition': `attachment; filename=${_project_SM_}-warp-${fileName}-conf.zip`,
+                'Content-Disposition': `attachment; filename=${_R_SLUG_}-warp-${fileName}-conf.zip`,
                 'Cache-Control': 'no-store, no-cache, must-revalidate',
                 'Pragma': 'no-cache'
             },

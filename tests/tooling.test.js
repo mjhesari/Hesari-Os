@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { createServer } from 'node:net';
+import { parseWorkerBundle } from '../src/common/worker-bundle.js';
 
 test('deployment CLI prepares a valid Worker and local development executes real routes', { timeout: 90_000 }, async t => {
     const fixture = mkdtempSync(join(tmpdir(), 'hesari-cli-'));
@@ -14,6 +15,8 @@ test('deployment CLI prepares a valid Worker and local development executes real
     t.after(() => rmSync(fixture, { recursive: true, force: true }));
     t.after(() => rmSync(logDirectory, { recursive: true, force: true }));
     for (const folder of ['scripts', 'src', 'dist', '.local']) mkdirSync(join(fixture, folder));
+    mkdirSync(join(fixture, 'src/common'));
+    copyFileSync(new URL('../src/common/worker-bundle.js', import.meta.url), join(fixture, 'src/common/worker-bundle.js'));
     for (const file of ['run-worker.js', 'worker-config.js']) copyFileSync(new URL(`../scripts/${file}`, import.meta.url), join(fixture, 'scripts', file));
     copyFileSync(new URL('../src/branding.json', import.meta.url), join(fixture, 'src/branding.json'));
     copyFileSync(new URL('../dist/worker.js', import.meta.url), join(fixture, 'dist/worker.js'));
@@ -34,7 +37,10 @@ test('deployment CLI prepares a valid Worker and local development executes real
     assert.equal(code, 0, output);
     const config = JSON.parse(readFileSync(join(fixture, '.local/wrangler.json'), 'utf8'));
     assert.equal(config.main, 'runtime/worker.js');
-    assert.equal(config.kv_namespaces[0].binding, 'kv');
+    const prepared = readFileSync(join(fixture, '.local/runtime/worker.js'), 'utf8');
+    const profile = parseWorkerBundle(prepared).profile;
+    assert.equal(config.kv_namespaces[0].binding, profile.kvBinding);
+    assert.match(profile.kvBinding, /^[a-z][a-f0-9]{24}$/);
     assert.equal(config.kv_namespaces[0].id, settings.kvNamespaceId);
     assert.ok(!JSON.stringify(config).includes(settings.apiToken));
 
@@ -54,6 +60,7 @@ test('deployment CLI prepares a valid Worker and local development executes real
         }
         assert.ok(panel, `Local Worker did not start: ${devOutput}`);
         assert.equal(panel.status, 200);
+        assert.equal(JSON.parse(readFileSync(join(fixture, '.local/wrangler.json'), 'utf8')).kv_namespaces[0].binding, profile.kvBinding);
         assert.ok((await panel.text()).includes('HESARI OS'));
         const denied = await fetch(`${url}/${settings.securePath}/panel/settings`);
         assert.equal(denied.status, 401);

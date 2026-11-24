@@ -34,7 +34,7 @@ export async function createCNAME(zoneID: string, domain: string) {
                 name: domain,
                 ttl: 1,
                 type: 'CNAME',
-                comment: `${_project_} Panel`,
+                comment: `${_R_PROJECT_} Panel`,
                 content: projectName,
                 proxied: true
             })

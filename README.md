@@ -74,14 +74,46 @@ npm run configure < .local/settings.json
 
 Upload the contents of `.local/worker.js` as a Worker module, enable
 `nodejs_compat` with compatibility date `2026-06-03` or later, and bind your KV
-namespace as **`kv`**. Remove legacy `UUID` and `TR_PASS` environment variables.
+namespace using the random **`KV binding`** printed by `npm run configure`.
+Credentials come from the embedded settings; legacy
+`UUID`, `TR_PASS`, `TROJAN_PASS` and `PASS` environment variables are not used.
 Open `https://<mainDomain>/<securePath>/panel` and set your login password.
 
-Pages deployments use the same configured module as `_worker.js`, a `kv`
-binding, and `CF_PAGES=1`. CLI deployment above targets Workers.
+Pages deployments use the same configured module as `_worker.js`, the same
+generated KV binding, and `CF_PAGES=1`. CLI deployment above targets Workers.
 
 The public release is `dist/worker.js` plus `dist/manifest.json`. The configured
 `.local/worker.js` contains your account token: never publish or share it.
+
+## Personalized Worker identifiers
+
+`configure`, `dev` and `deploy` generate cryptographically random names for the
+KV binding, embedded settings, source, pages, icon and protocol globals. Each
+installation gets its own names, without a personal or project name in the
+identifiers. The UI keeps its branding, and client configurations keep standard
+protocol names. The Telegram subscription caption has no emoji. Release builds
+are minified with Terser, without obfuscator.io.
+
+Names are saved in **`.local/identifiers.json`**, separately for each Cloudflare
+account ID and Worker hostname. Back up this file alongside your local settings;
+reuse it when moving the installation to another computer. Reconfiguration,
+rebuilding and panel updates preserve those names. A damaged identifiers file
+causes an error instead of silently generating a different KV binding.
+
+For an existing installation, bind the **same namespace ID** using the generated
+name to retain passwords and settings. CLI deployment does this automatically;
+manual Workers / Pages setup uses the `KV binding` value printed by `configure`.
+Existing `kv`, `bpb` and `en` bindings also work, with the generated binding taking
+precedence. The earlier branded binding must be renamed or reattached using the
+generated name. Rebuild and configure the entire Worker; do not combine an old
+settings wrapper with the new bundle. The connection password remains `trPass`
+in `.local/settings.json` and panel settings.
+
+Identifier changes are an experiment, not a verified fix for account blocking or
+error 1101. Cloudflare documents 1101 as a JavaScript runtime exception or a
+request that never produces a response. This build also catches asynchronous
+route failures and returns HTTP 500, with a plain-text fallback if the error
+page cannot load. See [Cloudflare's errors documentation](https://developers.cloudflare.com/workers/observability/errors/).
 
 ## Updates and verification
 

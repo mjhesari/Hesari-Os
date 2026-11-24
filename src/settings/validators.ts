@@ -267,8 +267,8 @@ function validateMinMax(form: PanelSettings, errors: ValidationError[]) {
 function validateChainProxy(form: PanelSettings, errors: ValidationError[]) {
     let chainProxy = form.chainProxy;
     if (!chainProxy) return true;
-    const vmRegex = new RegExp(`${_VM_}:\\/\\/.+$`);
-    const othersRegex = new RegExp(`(http|socks|socks5|${_VL_}|${_TR_}|ss):\\/\\/[^\\s@]+@[^\\s:]+:[^\\s]+`);
+    const vmRegex = new RegExp(`${_R_PROTOCOLC_}:\\/\\/.+$`);
+    const othersRegex = new RegExp(`(http|socks|socks5|${_R_PROTOCOLA_}|${_R_PROTOCOLB_}|ss):\\/\\/[^\\s@]+@[^\\s:]+:[^\\s]+`);
     const isVMess = vmRegex.test(chainProxy);
     const isOthers = othersRegex.test(chainProxy);
 
@@ -280,9 +280,9 @@ function validateChainProxy(form: PanelSettings, errors: ValidationError[]) {
                 'Standard formats are:',
                 ' + (socks or socks5 or http)://user:pass@server:port',
                 ' + (socks or socks5 or http)://base64@server:port',
-                ` + ${_VL_}://uuid@server:port...`,
-                ` + ${_VM_}://base64`,
-                ` + ${_TR_}://password@server:port...`,
+                ` + ${_R_PROTOCOLA_}://uuid@server:port...`,
+                ` + ${_R_PROTOCOLC_}://base64`,
+                ` + ${_R_PROTOCOLB_}://password@server:port...`,
                 ' + ss://base64@server:port...'
             ]
         });
@@ -300,7 +300,7 @@ function validateChainProxy(form: PanelSettings, errors: ValidationError[]) {
         type = vmConfig.net;
     }
 
-    if ([`${_VL_}:`, `${_TR_}:`, `${_VM_}:`].includes(protocol)) {
+    if ([`${_R_PROTOCOLA_}:`, `${_R_PROTOCOLB_}:`, `${_R_PROTOCOLC_}:`].includes(protocol)) {
         if (!username) {
             errors.push({
                 field: 'Chain Proxy',
@@ -316,7 +316,7 @@ function validateChainProxy(form: PanelSettings, errors: ValidationError[]) {
                 field: 'Chain Proxy',
                 message: [
                     'Invalid Config!',
-                    `${_VL_CAP_}, ${_VM_CAP_} or ${_TR_CAP_} security can be TLS, Reality or None.`
+                    `${_R_PROTOCOLALABEL_}, ${_R_PROTOCOLCLABEL_} or ${_R_PROTOCOLBLABEL_} security can be TLS, Reality or None.`
                 ]
             });
         }
@@ -326,7 +326,7 @@ function validateChainProxy(form: PanelSettings, errors: ValidationError[]) {
                 field: 'Chain Proxy',
                 message: [
                     'Invalid Config!',
-                    `${_VL_CAP_}, ${_VM_CAP_} or ${_TR_CAP_} transmission can be tcp, ws, grpc or httpupgrade.`
+                    `${_R_PROTOCOLALABEL_}, ${_R_PROTOCOLCLABEL_} or ${_R_PROTOCOLBLABEL_} transmission can be tcp, ws, grpc or httpupgrade.`
                 ]
             });
         }
@@ -482,7 +482,7 @@ function validateUUID(form: PanelSettings, errors: ValidationError[]) {
     const uuid = form.vlUUID;
     if (!isValidUUID(uuid)) {
         errors.push({
-            field: `${_VL_CAP_} UUID`,
+            field: `${_R_PROTOCOLALABEL_} UUID`,
             message: ['Invalid UUID!']
         });
     }
@@ -493,7 +493,7 @@ function validateTrPass(form: PanelSettings, errors: ValidationError[]) {
     const pass = form.trPass;
     if (![...pass].every(ch => charset.includes(ch))) {
         errors.push({
-            field: `${_TR_CAP_} Password`,
+            field: `${_R_PROTOCOLBLABEL_} Password`,
             message: ['Invalid characters!']
         });
     }

@@ -5,6 +5,7 @@ import { getGlobals, getMainSettings, getSettings } from '@settings';
 import { createCNAME, listZones } from '@api/dns';
 import { decompressGzipBase64, safeError } from '@common';
 import brand from '../branding.json' with { type: 'json' };
+import { encodeWorkerBundle, personalizeWorkerBundle } from '../common/worker-bundle.js';
 
 export async function updateMainSettings(newSettings: PanelSettings | null): Promise<Partial<EmbededSettings>> {
     const { accID, accEmail, apiToken, mainDomain, vlUUID, trPass, securePath } = getGlobals();
@@ -101,12 +102,9 @@ export async function buildScript(upgradePanel: boolean, settings?: MainSettings
         const res = await fetch(sourceUrl);
         if (!res.ok) throw new Error(`Failed to download the panel update (HTTP ${res.status}).`);
         script = await res.text();
-        if (!script.includes('SOURCE_CONTENT') || !script.includes('PANEL_HTML_CONTENT')) {
-            throw new Error('The update source did not return a bundled panel worker.');
-        }
         settings = getSettings();
     } else {
-        script = await decompressGzipBase64(SOURCE_CONTENT);
+        script = await decompressGzipBase64(_R_SOURCE_);
     }
 
     const { accID, accEmail, apiToken, mainDomain } = getGlobals();
@@ -125,48 +123,9 @@ export async function buildScript(upgradePanel: boolean, settings?: MainSettings
         mainDomain
     };
 
-    const embededContents = {
-        SOURCE_CONTENT,
-        PANEL_HTML_CONTENT,
-        LOGIN_HTML_CONTENT,
-        ERROR_HTML_CONTENT,
-        PROXY_IP_HTML_CONTENT,
-        ICON_CONTENT
-    };
+    if (upgradePanel) return personalizeWorkerBundle(script, _R_PROFILE_, embededSettings);
 
-    const embeded = upgradePanel
-        ? { EMBEDED_SETTINGS: embededSettings }
-        : { ...embededContents, EMBEDED_SETTINGS: embededSettings };
-
-    const buildTimestamp = new Date().toISOString();
-    const padding = paddCode();
-    const worker = [
-        `// ${accEmail}`,
-        `// Build: ${buildTimestamp}`,
-        '// @ts-nocheck',
-        `${padding}Object.assign(globalThis, ${JSON.stringify(embeded)});${script}`
-    ].join('\n');
-
-    return worker;
-}
-
-function paddCode() {
-    const minVars = 50, maxVars = 500;
-    const minFuncs = 50, maxFuncs = 500;
-
-    const varCount = Math.floor(Math.random() * (maxVars - minVars + 1)) + minVars;
-    const funcCount = Math.floor(Math.random() * (maxFuncs - minFuncs + 1)) + minFuncs;
-
-    const paddVars = Array.from({ length: varCount }, (_, i) => {
-        const varName = `__padd_${Math.random().toString(36).substring(2, 10)}_${i}`;
-        const value = Math.floor(Math.random() * 100000);
-        return `let ${varName} = ${value};`;
-    }).join('\n');
-
-    const paddFuncs = Array.from({ length: funcCount }, (_, i) => {
-        const funcName = `__paddFunc_${Math.random().toString(36).substring(2, 10)}_${i}`;
-        return `function ${funcName}() { return ${Math.floor(Math.random() * 1000)}; }`;
-    }).join('\n');
-
-    return `${paddVars}\n${paddFuncs}\n`;
+    return encodeWorkerBundle(script, {
+        panel: _R_PANEL_, login: _R_LOGIN_, error: _R_ERROR_, proxy: _R_PROXY_, icon: _R_ICON_
+    }, _R_PROFILE_, embededSettings);
 }

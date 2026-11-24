@@ -1,35 +1,40 @@
 import { EmbededSettings } from './settings';
+import { RuntimeProfile } from '../common/worker-bundle';
 
 declare global {
     interface Env {
         readonly CF_PAGES: string;
         readonly kv: KVNamespace;
+        readonly [name: string]: string | KVNamespace | undefined;
+        readonly bpb?: KVNamespace;
+        readonly en?: KVNamespace;
         readonly UUID?: string;
         readonly TR_PASS?: string;
     }
 
-    const SOURCE_CONTENT: string;
-    const EMBEDED_SETTINGS: EmbededSettings;
+    const _R_SOURCE_: string;
+    const _R_CONFIG_: EmbededSettings;
     const VERSION: string;
-    const ERROR_HTML_CONTENT: string;
-    const PANEL_HTML_CONTENT: string;
-    const LOGIN_HTML_CONTENT: string;
-    const PROXY_IP_HTML_CONTENT: string;
-    const ICON_CONTENT: string;
-    const _VL_: string;
-    const _VL_CAP_: string;
-    const _VM_: string;
-    const _VM_CAP_: string;
-    const _TR_: string;
-    const _TR_CAP_: string;
-    const _SS_: string;
-    const _V2_: string;
-    const _project_: string;
-    const _project_SM_: string;
-    const _repo_: string;
-    const _wizard_repo_: string;
-    const _website_: string;
-    const _public_proxy_ip_: string;
+    const _R_ERROR_: string;
+    const _R_PANEL_: string;
+    const _R_LOGIN_: string;
+    const _R_PROXY_: string;
+    const _R_ICON_: string;
+    const _R_PROTOCOLA_: string;
+    const _R_PROTOCOLALABEL_: string;
+    const _R_PROTOCOLC_: string;
+    const _R_PROTOCOLCLABEL_: string;
+    const _R_PROTOCOLB_: string;
+    const _R_PROTOCOLBLABEL_: string;
+    const _R_PROTOCOLD_: string;
+    const _R_CLIENT_: string;
+    const _R_PROJECT_: string;
+    const _R_SLUG_: string;
+    const _R_REPOSITORY_: string;
+    const _R_WIZARD_: string;
+    const _R_WEBSITE_: string;
+    const _R_PROXYHOST_: string;
+    const _R_PROFILE_: RuntimeProfile;
 
     interface Array<T> {
         concatIf<T>(condition: boolean, concat: T | T[]): T[];

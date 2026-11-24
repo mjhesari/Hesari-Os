@@ -86,8 +86,8 @@ async function renderPanel(request: Request, env: Env): Promise<Response> {
         }
     }
 
-    const str = await decompressGzipBase64(PANEL_HTML_CONTENT);
-    const html = str.replaceAll('__ICON__', ICON_CONTENT);
+    const str = await decompressGzipBase64(_R_PANEL_);
+    const html = str.replaceAll('__ICON__', _R_ICON_);
 
     return new Response(html, {
         headers: { 'Content-Type': 'text/html; charset=utf-8' }

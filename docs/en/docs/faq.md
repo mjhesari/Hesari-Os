@@ -39,8 +39,8 @@
     You can only install BPB using BPB Wizard and save panel address immediately. If you lost it install another one.  
 
 ??? question "I deployed it but Cloudflare returns error 1101!"
-    Your Cloudflare account has likely been flagged. Create a new Cloudflare account with an official email like Gmail and. Also, make sure the project name doesn't include the word "bpb".  
-    It is recommended to use **Wizard** for installation.  
+    [Cloudflare documents 1101](https://developers.cloudflare.com/workers/observability/errors/) as a JavaScript runtime exception or a request that never produces a response. This error alone does not establish that an account was flagged. Renaming identifiers or obfuscating code is not a guaranteed fix.
+    For HESARI OS, rebuild and configure the complete bundle using this repository's README and bind the existing KV namespace using the random `KV binding` name printed by `configure`. Back up `.local/identifiers.json` to preserve this installation's names. Legacy `kv`, `bpb` and `en` bindings also work. The connection password comes from the embedded `trPass` setting, not a `PASS` or `TROJAN_PASS` environment variable.
 
 ??? question "Can I use this for trading?"
     If your Cloudflare IP is located in Germany (which it usually is), using a single Germany proxy IP should be fine. But preferably use the Chain Proxy method to stabilize the IP.  

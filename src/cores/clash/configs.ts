@@ -162,7 +162,7 @@ export async function getClNormalConfig(): Promise<Response> {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-normal-clash.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-normal-clash.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'
@@ -206,7 +206,7 @@ export async function getClWarpConfig(isPro: boolean): Promise<Response> {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-${fileName}-clash.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-${fileName}-clash.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'

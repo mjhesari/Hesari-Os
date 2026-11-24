@@ -8,6 +8,9 @@ import { Script } from 'node:vm';
 import { build } from 'esbuild';
 import { renderAsset, validateBranding, escapeHtml, brandIcon } from './assets.js';
 import brand from '../src/branding.json' with { type: 'json' };
+import { compilerNames, createRuntimeProfile, encodeWorkerBundle, parseWorkerBundle } from '../src/common/worker-bundle.js';
+
+globalThis[compilerNames.profile] = createRuntimeProfile();
 
 test('all embedded pages bundle with the same identity and valid JavaScript', async () => {
     for (const page of ['panel', 'login', 'proxy-ip', 'error']) {
@@ -75,26 +78,29 @@ test('configured updates reject failed downloads and non-worker content', async 
 
 test('saving settings preserves the personalized embedded assets', async () => {
     const { buildScript } = await loadBuildScript();
-    const keys = ['SOURCE_CONTENT', 'PANEL_HTML_CONTENT', 'LOGIN_HTML_CONTENT', 'ERROR_HTML_CONTENT', 'PROXY_IP_HTML_CONTENT', 'ICON_CONTENT'];
+    const keys = ['source', 'panel', 'login', 'error', 'proxy', 'icon'].map(role => compilerNames[role]);
     const previous = Object.fromEntries(keys.map(key => [key, globalThis[key]]));
     keys.forEach(key => { globalThis[key] = `personalized-${key}`; });
     try {
         const output = await buildScript(false, { vlUUID: 'example', trPass: 'test-only', securePath: 'private', proxyIpMode: 'proxyip', proxyIPs: [], prefixes: [], fallback: '', dohUrl: '' });
-        keys.forEach(key => assert.ok(output.includes(`personalized-${key}`), key));
+        keys.slice(1).forEach(key => assert.ok(output.includes(`personalized-${key}`), key));
         assert.ok(output.includes('retained local source'));
+        assert.deepEqual(parseWorkerBundle(output).profile, globalThis[compilerNames.profile]);
         new Script(output);
     } finally { keys.forEach(key => { if (previous[key] === undefined) delete globalThis[key]; else globalThis[key] = previous[key]; }); }
 });
 
-test('local worker configuration embeds settings privately and refuses incomplete input', () => {
+test('local worker configuration embeds settings privately and refuses incomplete input', async () => {
     const fixture = mkdtempSync(join(tmpdir(), 'hesari-configure-'));
     try {
         for (const folder of ['scripts', 'src', 'dist']) mkdirSync(join(fixture, folder));
+        mkdirSync(join(fixture, 'src/common'));
+        copyFileSync(new URL('../src/common/worker-bundle.js', import.meta.url), join(fixture, 'src/common/worker-bundle.js'));
         copyFileSync(new URL('./configure-worker.js', import.meta.url), join(fixture, 'scripts/configure-worker.mjs'));
         copyFileSync(new URL('./worker-config.js', import.meta.url), join(fixture, 'scripts/worker-config.js'));
         writeFileSync(join(fixture, 'package.json'), '{"type":"module"}');
         writeFileSync(join(fixture, 'src/branding.json'), JSON.stringify(brand));
-        writeFileSync(join(fixture, 'dist/worker.js'), '/* public worker */');
+        writeFileSync(join(fixture, 'dist/worker.js'), await encodeWorkerBundle('/* public worker */', { panel: '', login: '', error: '', proxy: '', icon: '' }, createRuntimeProfile()));
         const settings = { accID: 'example', accEmail: 'test@example.com', apiToken: 'private-test-token', vlUUID: '00000000-0000-4000-8000-000000000001', trPass: 'test-only', securePath: 'private', mainDomain: 'example.workers.dev', proxyIpMode: 'prefix', proxyIPs: [], prefixes: [] };
         const command = [join(fixture, 'scripts/configure-worker.mjs')];
         const incomplete = spawnSync(process.execPath, command, { input: JSON.stringify({ ...settings, mainDomain: '' }), encoding: 'utf8' });

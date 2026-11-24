@@ -162,7 +162,7 @@ export async function getSbCustomConfig(isFragment: boolean): Promise<Response> 
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-${fileName}-sing-box.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-${fileName}-sing-box.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'
@@ -204,7 +204,7 @@ export async function getSbWarpConfig(): Promise<Response> {
         status: 200,
         headers: {
             'Content-Type': 'application/json',
-            'Content-Disposition': `attachment; filename=${_project_SM_}-warp-sing-box.json`,
+            'Content-Disposition': `attachment; filename=${_R_SLUG_}-warp-sing-box.json`,
             'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0',
             'Pragma': 'no-cache',
             'Expires': '0'
