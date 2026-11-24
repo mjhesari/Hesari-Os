@@ -1150,7 +1150,7 @@ function renderSubscriptions(subscriptions) {
     for (const [type, { label, categories }] of Object.entries(subscriptions)) {
         const help = elm('a', {
             className: 'help-icon',
-            href: `${BRAND.documentationUrl.replace(/\/$/, '')}/usage/${type}/`,
+            href: `${BRAND.documentationUrl.replace(/\/$/, '')}/usage/${type}${BRAND.documentationFormat === 'markdown' ? '.md' : '/'}`,
             target: '_blank',
             title: 'Help'
         }, createIcon('info'));

@@ -17,6 +17,10 @@ test('all embedded pages bundle with the same identity and valid JavaScript', as
         assert.ok(html.includes('GPL-3.0'), page);
         assert.doesNotMatch(html, /__(?:BRAND_\w+|VERSION)__/, page);
         assert.match(html, /image\/svg\+xml/);
+        if (page === 'panel' && brand.documentationFormat === 'markdown') {
+            assert.ok(html.includes('docs/en/docs/configuration/common.md'));
+            assert.ok(!html.includes('Hesari-Os/blob/main/docs/en/docs/configuration/common/'));
+        }
         for (const [, attributes, code] of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)) {
             if (!attributes.includes('module')) new Script(code, { filename: `${page}.js` });
         }

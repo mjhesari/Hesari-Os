@@ -8,7 +8,7 @@ for (const language of ['en', 'fa']) {
     let yaml = readFileSync(file, 'utf8');
     yaml = yaml.replace(/^site_name:.*$/m, `site_name: ${JSON.stringify(brand.name)}`)
         .replace(/^site_url:.*\n/m, '')
-        .replace(/^site_name:.*$/m, match => `${match}\nsite_url: ${JSON.stringify(`${brand.documentationUrl.replace(/\/$/, '')}/${language === 'fa' ? 'fa/' : ''}`)}`)
+        .replace(/^site_name:.*$/m, match => brand.documentationFormat === 'markdown' ? match : `${match}\nsite_url: ${JSON.stringify(`${brand.documentationUrl.replace(/\/$/, '')}/${language === 'fa' ? 'fa/' : ''}`)}`)
         .replace(/^repo_url:.*$/m, `repo_url: ${JSON.stringify(brand.repositoryUrl || brand.githubUrl)}`)
         .replace(/^repo_name:.*\n/m, '')
         .replace(/^copyright:.*$/m, `repo_name: ${JSON.stringify(brand.repositoryUrl ? brand.name : brand.owner)}\ncopyright: ${JSON.stringify(`${brand.name} by ${brand.owner} · Based on BPB Panel · GPL-3.0`)}`)
@@ -17,7 +17,7 @@ for (const language of ['en', 'fa']) {
         .replace(/link: \/BPB-Worker-Panel\/fa\//g, 'link: ./fa/')
         .replace(/link: \/BPB-Worker-Panel\//g, 'link: ../')
         .replace(/name: (?:Source code|GitHub profile)/, `name: ${brand.repositoryUrl ? 'Source code' : 'GitHub profile'}`)
-        .replace(/link: (?:\.\/fa\/|\.\.\/)/g, `link: ${brand.documentationUrl.replace(/\/$/, '')}/${language === 'en' ? 'fa/' : ''}`);
+        .replace(/(alternate:[\s\S]*?\n\s+link:) [^\n]+/, (_, prefix) => `${prefix} ${brand.documentationFormat === 'markdown' ? `${brand.repositoryUrl}/blob/main/docs/${language === 'en' ? 'fa' : 'en'}/docs/index.md` : `${brand.documentationUrl.replace(/\/$/, '')}/${language === 'en' ? 'fa/' : ''}`}`);
     writeFileSync(file, yaml);
 }
 writeFileSync(new URL('../docs/assets/favicon.svg', import.meta.url), brandIcon());

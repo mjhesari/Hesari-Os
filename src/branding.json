@@ -9,7 +9,8 @@
   "githubUrl": "https://github.com/mjhesari",
   "websiteUrl": "https://mj-hesari.ir",
   "repositoryUrl": "https://github.com/mjhesari/Hesari-Os",
-  "documentationUrl": "https://mjhesari.github.io/Hesari-Os/",
+  "documentationUrl": "https://github.com/mjhesari/Hesari-Os/blob/main/docs/en/docs/",
+  "documentationFormat": "markdown",
   "updates": {
     "manifestUrl": "https://github.com/mjhesari/Hesari-Os/releases/latest/download/manifest.json",
     "workerUrl": "https://github.com/mjhesari/Hesari-Os/releases/latest/download/worker.js",

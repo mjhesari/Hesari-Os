@@ -6,7 +6,7 @@
 
 پنل متن‌باز مدیریت کانفیگ روی Cloudflare Workers و Pages برای VLESS، Trojan، WARP، لینک اشتراک، QR Code و DNS خصوصی؛ با هستهٔ شبکهٔ BPB Worker Panel و رابط اختصاصی HESARI OS.
 
-[English](README.md) · [نسخه‌های انتشار](https://github.com/mjhesari/Hesari-Os/releases) · [مستندات](https://mjhesari.github.io/Hesari-Os/fa/) · [MJ Hesari](https://mj-hesari.ir)
+[English](README.md) · [نسخه‌های انتشار](https://github.com/mjhesari/Hesari-Os/releases) · [مستندات](https://github.com/mjhesari/Hesari-Os/blob/main/docs/fa/docs/index.md) · [MJ Hesari](https://mj-hesari.ir)
 
 ## نصب
 

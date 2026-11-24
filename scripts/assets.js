@@ -25,6 +25,7 @@ export function validateBranding(config = brand) {
     if (Boolean(config.updates.manifestUrl) !== Boolean(config.updates.workerUrl)) {
         throw new Error('Configure both update manifestUrl and workerUrl, or leave both empty.');
     }
+    if (config.documentationFormat && !['markdown', 'website'].includes(config.documentationFormat)) throw new Error('documentationFormat must be markdown or website.');
 }
 
 export function brandIcon() {
@@ -57,9 +58,15 @@ export async function renderAsset(page, { minify = true } = {}) {
         BRAND_DESCRIPTION: brand.description,
         BRAND_BACKGROUND: brand.colors.background,
         BRAND_GITHUB: brand.githubUrl,
+        BRAND_REPO: brand.repositoryUrl || brand.githubUrl,
         BRAND_WEBSITE: brand.websiteUrl,
         BRAND_DOCS: brand.documentationUrl.replace(/\/$/, '')
     };
+    html = html.replace(/href="__BRAND_DOCS__\/([^"<>]+)"/g, (_, path) => {
+        const documentPath = path.replace(/\/$/, '');
+        const suffix = brand.documentationFormat === 'markdown' ? '.md' : '/';
+        return `href="${escapeHtml(`${brand.documentationUrl.replace(/\/$/, '')}/${documentPath}${suffix}`)}"`;
+    });
     for (const [key, value] of Object.entries(values)) html = html.replaceAll(`__${key}__`, () => escapeHtml(value));
     return minify ? htmlMinify(html, { collapseWhitespace: true, removeAttributeQuotes: true, minifyCSS: true }) : html;
 }

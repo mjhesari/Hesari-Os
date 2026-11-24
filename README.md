@@ -8,7 +8,7 @@ An open-source Cloudflare Workers / Pages configuration panel for VLESS, Trojan,
 WARP, subscriptions, QR codes and private DNS. Built on the BPB Worker Panel
 networking engine with a personalized HESARI OS interface.
 
-[فارسی](README_fa.md) · [Releases](https://github.com/mjhesari/Hesari-Os/releases) · [Documentation](https://mjhesari.github.io/Hesari-Os/) · [MJ Hesari](https://mj-hesari.ir)
+[فارسی](README_fa.md) · [Releases](https://github.com/mjhesari/Hesari-Os/releases) · [Documentation](https://github.com/mjhesari/Hesari-Os/blob/main/docs/en/docs/index.md) · [MJ Hesari](https://mj-hesari.ir)
 
 ## Install
 

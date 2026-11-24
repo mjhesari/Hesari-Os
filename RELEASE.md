@@ -1,3 +1,9 @@
+# HESARI OS v5.1.3
+
+- Links panel help directly to this repository’s Markdown documentation, so help works without GitHub Pages or Actions.
+- Keeps the complete configuration panel, real Worker runtime and isolated integration checks from v5.1.2.
+- Optional workflow templates stay inactive; previous history remains in the local `bpb-history` branch.
+
 # HESARI OS v5.1.2 — Personal network workspace
 
 Build. Manage. Evolve.

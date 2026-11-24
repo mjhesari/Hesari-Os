@@ -1,5 +1,4 @@
 site_name: "HESARI OS"
-site_url: "https://mjhesari.github.io/Hesari-Os/fa/"
 repo_url: "https://github.com/mjhesari/Hesari-Os"
 repo_name: "HESARI OS"
 copyright: "HESARI OS by MJ Hesari · Based on BPB Panel · GPL-3.0"
@@ -66,7 +65,7 @@ extra:
   alternate:
     - name: English
       lang: en
-      link: https://mjhesari.github.io/Hesari-Os/
+      link: https://github.com/mjhesari/Hesari-Os/blob/main/docs/en/docs/index.md
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/mjhesari/Hesari-Os
